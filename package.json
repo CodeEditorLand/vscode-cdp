@@ -1,18 +1,39 @@
 {
-	"author": {
-		"email": "Hello@Playform.Cloud",
-		"name": "Playform",
-		"url": "https://playform.cloud"
-	},
+	"name": "@vscode/cdp",
+	"version": "0.0.1",
+	"private": false,
+	"description": "Node.js libraries for interfacing with the Chrome DevTools Protocol",
+	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
 	"bugs": {
 		"url": "https://github.com/CodeEditorLand/Foundation/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "Playform",
+		"email": "Hello@Playform.Cloud",
+		"url": "https://playform.cloud"
+	},
+	"type": "module",
+	"main": "dist/index.js",
+	"scripts": {
+		"build": "rimraf dist && tsc",
+		"postinstall": "yarn update",
+		"prepack": "rimraf dist && tsc",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
+		"test:unit": "jest src",
+		"test:watch": "jest src --watch",
+		"update": "ts-node src/build/download-types",
+		"watch": "rimraf dist && tsc --watch"
 	},
 	"dependencies": {
 		"@types/ws": "^7.4.4",
 		"cockatiel": "^2.0.2",
 		"ws": "^7.4.6"
 	},
-	"description": "Node.js libraries for interfacing with the Chrome DevTools Protocol",
 	"devDependencies": {
 		"@types/jest": "^26.0.23",
 		"@types/node": "^15.12.2",
@@ -25,30 +46,9 @@
 		"ts-jest": "^27.0.3",
 		"ts-node": "^10.0.0",
 		"typescript": "^4.3.2",
-		"typescript-esbuild": ""
+		"typescript-esbuild": "0.4.5"
 	},
-	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
-	"license": "SEE LICENSE IN LICENSE",
-	"main": "dist/index.js",
-	"name": "@vscode/cdp",
-	"private": false,
 	"publishConfig": {
 		"access": "public"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
-	},
-	"scripts": {
-		"build": "rimraf dist && tsc",
-		"postinstall": "yarn update",
-		"prepack": "rimraf dist && tsc",
-		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
-		"test:unit": "jest src",
-		"test:watch": "jest src --watch",
-		"update": "ts-node src/build/download-types",
-		"watch": "rimraf dist && tsc --watch"
-	},
-	"type": "module",
-	"version": "0.0.1"
+	}
 }
