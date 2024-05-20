@@ -35,12 +35,12 @@ export class LoopbackTransport implements ITransport {
 		this.endEmitter.emit(error);
 	}
 
-	
+	/** @inheritdoc */
 	public send(message: Transportable): void {
 		this.didSendEmitter.emit(message);
 	}
 
-	
+	/** @inheritdoc */
 	public dispose(): void {
 		// no-op
 	}
