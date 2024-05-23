@@ -17,7 +17,7 @@
 	"devDependencies": {
 		"@types/node": "20.12.12",
 		"concurrently": "8.2.2",
-		"devtools-protocol": "0.0.1302984",
+		"devtools-protocol": "0.0.1304863",
 		"execa": "9.1.0",
 		"got": "14.3.0",
 		"rimraf": "5.0.7"
