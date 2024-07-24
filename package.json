@@ -10,16 +10,16 @@
 		"update": "ts-node src/build/download-types"
 	},
 	"dependencies": {
-		"@types/ws": "7.4.4",
-		"cockatiel": "2.0.2",
-		"ws": "7.4.6"
+		"@types/ws": "8.5.11",
+		"cockatiel": "3.2.1",
+		"ws": "8.18.0"
 	},
 	"devDependencies": {
-		"@types/node": "15.12.2",
-		"concurrently": "6.2.0",
-		"devtools-protocol": "0.0.888392",
-		"execa": "5.1.1",
-		"got": "11.8.2",
-		"rimraf": "3.0.2"
+		"@types/node": "20.14.12",
+		"concurrently": "8.2.2",
+		"devtools-protocol": "0.0.1330662",
+		"execa": "9.3.0",
+		"got": "14.4.1",
+		"rimraf": "6.0.1"
 	}
 }
