@@ -25,7 +25,10 @@ export namespace CdpProtocol {
 
 	export type Message = ICommand | ISuccess | IError;
 
-	export const isCommand = (message: Message): message is ICommand => 'method' in message;
-	export const isResponse = (message: Message): message is IError | ISuccess =>
-		'error' in message || 'result' in message;
+	export const isCommand = (message: Message): message is ICommand =>
+		"method" in message;
+	export const isResponse = (
+		message: Message,
+	): message is IError | ISuccess =>
+		"error" in message || "result" in message;
 }
