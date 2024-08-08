@@ -6,9 +6,9 @@
 	},
 	"description": "Node.js libraries for interfacing with the Chrome DevTools Protocol",
 	"devDependencies": {
-		"@types/node": "22.0.2",
+		"@types/node": "22.1.0",
 		"concurrently": "8.2.2",
-		"devtools-protocol": "0.0.1335233",
+		"devtools-protocol": "0.0.1338866",
 		"execa": "9.3.0",
 		"got": "14.4.2",
 		"rimraf": "6.0.1"
