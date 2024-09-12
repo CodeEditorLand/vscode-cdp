@@ -1,9 +1,0 @@
-{
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": true
-  },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "jest.jestCommandLine": "jest src",
-  "debug.javascript.unmapMissingSources": true,
-}
