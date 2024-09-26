@@ -15,9 +15,9 @@
 		"ws": "8.18.0"
 	},
 	"devDependencies": {
-		"@types/node": "22.6.0",
+		"@types/node": "22.7.2",
 		"concurrently": "9.0.1",
-		"devtools-protocol": "0.0.1358005",
+		"devtools-protocol": "0.0.1359167",
 		"execa": "9.4.0",
 		"got": "14.4.2",
 		"rimraf": "6.0.1"
