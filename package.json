@@ -1,10 +1,19 @@
 {
+	"name": "@vscode/cdp",
+	"description": "Node.js libraries for interfacing with the Chrome DevTools Protocol",
+	"main": "dist/index.js",
+	"scripts": {
+		"build": "rimraf dist && tsc",
+		"prepack": "rimraf dist && tsc",
+		"test:unit": "jest src",
+		"test:watch": "jest src --watch",
+		"update": "ts-node src/build/download-types"
+	},
 	"dependencies": {
 		"@types/ws": "8.5.12",
 		"cockatiel": "3.2.1",
 		"ws": "8.18.0"
 	},
-	"description": "Node.js libraries for interfacing with the Chrome DevTools Protocol",
 	"devDependencies": {
 		"@types/node": "22.7.3",
 		"concurrently": "9.0.1",
@@ -12,14 +21,5 @@
 		"execa": "9.4.0",
 		"got": "14.4.2",
 		"rimraf": "6.0.1"
-	},
-	"main": "dist/index.js",
-	"name": "@vscode/cdp",
-	"scripts": {
-		"build": "rimraf dist && tsc",
-		"prepack": "rimraf dist && tsc",
-		"test:unit": "jest src",
-		"test:watch": "jest src --watch",
-		"update": "ts-node src/build/download-types"
 	}
 }
