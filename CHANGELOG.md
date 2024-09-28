@@ -1,3 +1,0 @@
-# Changelog
-
-No releases yet
