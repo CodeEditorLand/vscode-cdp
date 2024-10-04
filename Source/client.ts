@@ -2,12 +2,13 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { Event, EventEmitter } from 'cockatiel';
-import { CdpClientHandlers } from './api';
-import { CdpProtocol } from './cdp-protocol';
-import { CdpSession } from './cdp-session';
-import { ConnectionState } from './connection';
-import { ConnectionClosedError, ProtocolError } from './errors';
+import { Event, EventEmitter } from "cockatiel";
+
+import { CdpClientHandlers } from "./api";
+import { CdpProtocol } from "./cdp-protocol";
+import { CdpSession } from "./cdp-session";
+import { ConnectionState } from "./connection";
+import { ConnectionClosedError, ProtocolError } from "./errors";
 
 interface IProtocolCallback {
 	resolve: (o: unknown) => void;
@@ -37,8 +38,8 @@ const makeEventClient = <TDomains>(session: {
 		{ emitters: Map<string, EventEmitter<unknown>>; proxy: unknown }
 	>(); // cache proxy creations
 
-	session.onDidReceiveEvent(evt => {
-		const [domain, event] = evt.method.split('.');
+	session.onDidReceiveEvent((evt) => {
+		const [domain, event] = evt.method.split(".");
 		eventProxies.get(domain)?.emitters.get(event)?.emit(evt.params);
 	});
 
@@ -58,12 +59,16 @@ const makeEventClient = <TDomains>(session: {
 						get(_, eventOrMethod: string) {
 							if (!eventRe.test(eventOrMethod)) {
 								return (params: Record<string, unknown>) =>
-									session.request(`${domain}.${eventOrMethod}`, params);
+									session.request(
+										`${domain}.${eventOrMethod}`,
+										params,
+									);
 							}
 
 							// `onFoo` -> `foo`:
 							const event =
-								eventOrMethod.slice(2, 3).toLowerCase() + eventOrMethod.slice(3);
+								eventOrMethod.slice(2, 3).toLowerCase() +
+								eventOrMethod.slice(3);
 
 							const existing = emitters.get(event);
 							if (existing) {
@@ -132,10 +137,16 @@ export class ClientCdpSession<TDomains> extends CdpSession {
 	 */
 	public request(method: string, params: Record<string, unknown> = {}) {
 		if (this.connection.state === ConnectionState.Closed) {
-			return Promise.reject(new ConnectionClosedError(this.connection.cause));
+			return Promise.reject(
+				new ConnectionClosedError(this.connection.cause),
+			);
 		}
 
-		const id = this.connection.object.request(method, params, this.sessionId);
+		const id = this.connection.object.request(
+			method,
+			params,
+			this.sessionId,
+		);
 		return new Promise<unknown>((resolve, reject) => {
 			const obj: IProtocolCallback = { resolve, reject, method };
 
@@ -181,7 +192,7 @@ export class ClientCdpSession<TDomains> extends CdpSession {
 		}
 
 		this.callbacks.delete(object.id);
-		if ('error' in object) {
+		if ("error" in object) {
 			callback.reject(
 				ProtocolError.from(
 					{
@@ -192,7 +203,7 @@ export class ClientCdpSession<TDomains> extends CdpSession {
 					callback.stack,
 				),
 			);
-		} else if ('result' in object) {
+		} else if ("result" in object) {
 			callback.resolve(object.result);
 		} else {
 			/* istanbul ignore next */

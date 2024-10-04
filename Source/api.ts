@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { Event } from 'cockatiel';
+import { Event } from "cockatiel";
 
 /**
  * Primitive definition of a CDP domain.
@@ -22,20 +22,19 @@ export interface IEventDef<TParams> {
 }
 
 type DomainEventHandlers<TDomain extends IDomain> = {
-	[TKey in keyof TDomain['requests']]: Record<
+	[TKey in keyof TDomain["requests"]]: Record<
 		string,
 		never
-	> extends TDomain['requests'][TKey]['params']
-		? () => Promise<TDomain['requests'][TKey]['result']>
+	> extends TDomain["requests"][TKey]["params"]
+		? () => Promise<TDomain["requests"][TKey]["result"]>
 		: (
-				arg: TDomain['requests'][TKey]['params'],
-		  ) => Promise<TDomain['requests'][TKey]['result']>;
-} &
-	{
-		[TKey in keyof TDomain['events'] as `on${Capitalize<string & TKey>}`]: Event<
-			TDomain['events'][TKey]['params']
-		>;
-	};
+				arg: TDomain["requests"][TKey]["params"],
+			) => Promise<TDomain["requests"][TKey]["result"]>;
+} & {
+	[TKey in keyof TDomain["events"] as `on${Capitalize<string & TKey>}`]: Event<
+		TDomain["events"][TKey]["params"]
+	>;
+};
 
 /**
  * A generic type that creates Event handler methods for a map of CDP domains.
@@ -61,12 +60,12 @@ export type CdpMethodHandlerFunction<TDomains, TParams, TResponse> = (
 export type CdpServerMethodHandlers<TDomains> = {
 	[TDomainName in keyof TDomains]: TDomains[TDomainName] extends IDomain
 		? {
-				[TKey in keyof TDomains[TDomainName]['requests']]: CdpMethodHandlerFunction<
+				[TKey in keyof TDomains[TDomainName]["requests"]]: CdpMethodHandlerFunction<
 					TDomains,
-					TDomains[TDomainName]['requests'][TKey]['params'],
-					TDomains[TDomainName]['requests'][TKey]['result']
+					TDomains[TDomainName]["requests"][TKey]["params"],
+					TDomains[TDomainName]["requests"][TKey]["result"]
 				>;
-		  }
+			}
 		: never;
 } & {
 	unknown?(
@@ -83,9 +82,9 @@ export type CdpServerMethodHandlers<TDomains> = {
 export type CdpServerEventDispatcher<TDomains> = {
 	[TDomainName in keyof TDomains]: TDomains[TDomainName] extends IDomain
 		? {
-				[TKey in keyof TDomains[TDomainName]['events']]: (
-					arg: TDomains[TDomainName]['events'][TKey]['params'],
+				[TKey in keyof TDomains[TDomainName]["events"]]: (
+					arg: TDomains[TDomainName]["events"][TKey]["params"],
 				) => void;
-		  }
+			}
 		: never;
 };

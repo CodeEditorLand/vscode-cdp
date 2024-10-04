@@ -2,10 +2,11 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { TextDecoder } from 'util';
-import { CdpProtocol } from '../cdp-protocol';
-import { Transportable } from '../transport';
-import { ISerializer } from './index';
+import { TextDecoder } from "util";
+
+import { CdpProtocol } from "../cdp-protocol";
+import { Transportable } from "../transport";
+import { ISerializer } from "./index";
 
 export class JsonSerializer implements ISerializer {
 	private decoder?: TextDecoder;
@@ -15,7 +16,7 @@ export class JsonSerializer implements ISerializer {
 	}
 
 	deserialize(message: Transportable): CdpProtocol.Message {
-		if (typeof message !== 'string') {
+		if (typeof message !== "string") {
 			this.decoder ??= new TextDecoder();
 			message = this.decoder.decode(message);
 		}

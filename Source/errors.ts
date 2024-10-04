@@ -2,8 +2,8 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { CdpProtocol } from './cdp-protocol';
-import { Transportable } from './transport';
+import { CdpProtocol } from "./cdp-protocol";
+import { Transportable } from "./transport";
 
 export const enum ProtocolErrorCode {
 	// CDP Errors:
@@ -56,15 +56,23 @@ export class ProtocolError extends CdpError {
 		}
 	}
 
-	constructor(public readonly cause: IProtocolErrorCause, originalStack?: string) {
-		super(`CDP error ${cause.code} calling method ${cause.method}: ${cause.message}`);
+	constructor(
+		public readonly cause: IProtocolErrorCause,
+		originalStack?: string,
+	) {
+		super(
+			`CDP error ${cause.code} calling method ${cause.method}: ${cause.message}`,
+		);
 		if (originalStack) {
 			this.stack = originalStack;
 		}
 	}
 
 	public serialize(id: number): CdpProtocol.IError {
-		return { id, error: { code: this.cause.code, message: this.cause.message } };
+		return {
+			id,
+			error: { code: this.cause.code, message: this.cause.message },
+		};
 	}
 }
 
@@ -93,8 +101,11 @@ export class ServerError extends ProtocolError {}
  * command returns.
  */
 export class ConnectionClosedError extends CdpError {
-	constructor(public readonly cause?: Error, originalStack?: string) {
-		super(cause ? cause.message : 'Connection closed');
+	constructor(
+		public readonly cause?: Error,
+		originalStack?: string,
+	) {
+		super(cause ? cause.message : "Connection closed");
 		if (originalStack) {
 			this.stack = originalStack;
 		}
@@ -106,7 +117,10 @@ export class ConnectionClosedError extends CdpError {
  * deserialization of input fails.
  */
 export class DeserializationError extends CdpError {
-	constructor(public readonly cause: Error, public readonly protocolMessage: Transportable) {
+	constructor(
+		public readonly cause: Error,
+		public readonly protocolMessage: Transportable,
+	) {
 		super(`Deserialization of a message failed: ${cause.message}`);
 	}
 }

@@ -2,9 +2,10 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { EventEmitter, IDisposable } from 'cockatiel';
-import { CdpProtocol } from './cdp-protocol';
-import { Connection, ConnectionState } from './connection';
+import { EventEmitter, IDisposable } from "cockatiel";
+
+import { CdpProtocol } from "./cdp-protocol";
+import { Connection, ConnectionState } from "./connection";
 
 /**
  * Base CDP session that the client and server extend.
@@ -31,9 +32,14 @@ export abstract class CdpSession implements IDisposable {
 		return this.connection.state === ConnectionState.Closed;
 	}
 
-	constructor(connection: Connection<CdpSession>, public readonly sessionId: string | undefined) {
+	constructor(
+		connection: Connection<CdpSession>,
+		public readonly sessionId: string | undefined,
+	) {
 		this.connection = { state: ConnectionState.Open, object: connection };
-		this.disposables.push(connection.onDidClose(cause => this.disposeSelf(cause)));
+		this.disposables.push(
+			connection.onDidClose((cause) => this.disposeSelf(cause)),
+		);
 	}
 
 	/**

@@ -2,16 +2,21 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { EventEmitter } from 'cockatiel';
-import { CdpProtocol } from './cdp-protocol';
-import { CdpSession } from './cdp-session';
-import { ClientCdpSession } from './client';
-import { CdpBrowser, CdpV8 } from './definitions';
-import { DeserializationError, MessageProcessingError, UnknownSessionError } from './errors';
-import { ISerializer } from './serializer';
-import { JsonSerializer } from './serializer/json';
-import { ServerCdpSession } from './server';
-import { ITransport, Transportable } from './transport';
+import { EventEmitter } from "cockatiel";
+
+import { CdpProtocol } from "./cdp-protocol";
+import { CdpSession } from "./cdp-session";
+import { ClientCdpSession } from "./client";
+import { CdpBrowser, CdpV8 } from "./definitions";
+import {
+	DeserializationError,
+	MessageProcessingError,
+	UnknownSessionError,
+} from "./errors";
+import { ISerializer } from "./serializer";
+import { JsonSerializer } from "./serializer/json";
+import { ServerCdpSession } from "./server";
+import { ITransport, Transportable } from "./transport";
 
 type SessionCtor<T extends CdpSession> = {
 	new (connection: Connection<CdpSession>, sessionId: string | undefined): T;
@@ -26,7 +31,8 @@ export class Connection<T extends CdpSession> {
 	private _closed = false;
 	private readonly closeEmitter = new EventEmitter<Error | undefined>();
 	private readonly willSendEmitter = new EventEmitter<CdpProtocol.ICommand>();
-	private readonly didReceiveEmitter = new EventEmitter<CdpProtocol.Message>();
+	private readonly didReceiveEmitter =
+		new EventEmitter<CdpProtocol.Message>();
 	private readonly receiveErrorEmitter = new EventEmitter<Error>();
 
 	/**
@@ -70,7 +76,11 @@ export class Connection<T extends CdpSession> {
 		transport: ITransport,
 		serializer: ISerializer = new JsonSerializer(),
 	): ClientConnection<TDomains> {
-		return new Connection<ClientCdpSession<TDomains>>(transport, serializer, ClientCdpSession);
+		return new Connection<ClientCdpSession<TDomains>>(
+			transport,
+			serializer,
+			ClientCdpSession,
+		);
 	}
 
 	/**
@@ -80,7 +90,11 @@ export class Connection<T extends CdpSession> {
 		transport: ITransport,
 		serializer: ISerializer = new JsonSerializer(),
 	): ServerConnection<TDomains> {
-		return new Connection<ServerCdpSession<TDomains>>(transport, serializer, ServerCdpSession);
+		return new Connection<ServerCdpSession<TDomains>>(
+			transport,
+			serializer,
+			ServerCdpSession,
+		);
 	}
 
 	constructor(
@@ -88,8 +102,8 @@ export class Connection<T extends CdpSession> {
 		private readonly serializer: ISerializer,
 		private readonly sessionCtor: SessionCtor<T>,
 	) {
-		transport.onMessage(message => this.onMessage(message));
-		transport.onEnd(err => this.onTransportClose(err));
+		transport.onMessage((message) => this.onMessage(message));
+		transport.onEnd((err) => this.onTransportClose(err));
 	}
 
 	/**
@@ -163,7 +177,9 @@ export class Connection<T extends CdpSession> {
 
 		this.didReceiveEmitter.emit(object);
 
-		const session = object.sessionId ? this.sessions.get(object.sessionId) : this.rootSession;
+		const session = object.sessionId
+			? this.sessions.get(object.sessionId)
+			: this.rootSession;
 		if (!session) {
 			this.receiveErrorEmitter.emit(new UnknownSessionError(object));
 			return;
@@ -172,7 +188,9 @@ export class Connection<T extends CdpSession> {
 		try {
 			session.injectMessage(object);
 		} catch (e) {
-			this.receiveErrorEmitter.emit(new MessageProcessingError(e, object));
+			this.receiveErrorEmitter.emit(
+				new MessageProcessingError(e, object),
+			);
 			return;
 		}
 	}

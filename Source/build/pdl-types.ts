@@ -57,21 +57,21 @@ export interface IDataType<WithId> {
 }
 
 export interface RefType<WithId> extends IDataType<WithId> {
-	type: '';
+	type: "";
 	$ref: string;
 }
 
 export interface ObjectType<WithId> extends IDataType<WithId> {
-	type: 'object';
+	type: "object";
 	properties: ReadonlyArray<DataType<false>>;
 }
 
 export interface StringType<WithId> extends IDataType<WithId> {
-	type: 'string';
+	type: "string";
 	enum?: ReadonlyArray<string>;
 }
 
 export interface ArrayType<WithId> extends IDataType<WithId> {
-	type: 'array';
+	type: "array";
 	items: DataType<false>;
 }

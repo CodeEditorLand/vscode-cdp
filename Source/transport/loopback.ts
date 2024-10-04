@@ -2,8 +2,9 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { EventEmitter } from 'cockatiel';
-import { ITransport, Transportable } from './index';
+import { EventEmitter } from "cockatiel";
+
+import { ITransport, Transportable } from "./index";
 
 /**
  * Transport that allows manual control, useful for testing.

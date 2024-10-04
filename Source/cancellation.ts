@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { Event, IDisposable, TaskCancelledError } from 'cockatiel';
+import { Event, IDisposable, TaskCancelledError } from "cockatiel";
 
 export interface ICancellationToken {
 	readonly onCancellationRequested: Event<void>;
@@ -19,7 +19,9 @@ export function timeoutPromise<T>(
 	message?: string,
 ): Promise<T> {
 	if (cancellation.isCancellationRequested) {
-		return Promise.reject(new TaskCancelledError(message || 'Task cancelled'));
+		return Promise.reject(
+			new TaskCancelledError(message || "Task cancelled"),
+		);
 	}
 
 	let disposable: IDisposable;
@@ -27,7 +29,7 @@ export function timeoutPromise<T>(
 	return Promise.race([
 		new Promise<never>((_resolve, reject) => {
 			disposable = cancellation.onCancellationRequested(() =>
-				reject(new TaskCancelledError(message || 'Task cancelled')),
+				reject(new TaskCancelledError(message || "Task cancelled")),
 			);
 		}),
 		promise.finally(() => disposable.dispose()),

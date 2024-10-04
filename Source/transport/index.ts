@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { Event, IDisposable } from 'cockatiel';
+import { Event, IDisposable } from "cockatiel";
 
 export type Transportable = string | Uint8Array;
 
@@ -24,4 +24,4 @@ export interface ITransport extends IDisposable {
 	send(message: Transportable): void;
 }
 
-export * from './websocket';
+export * from "./websocket";

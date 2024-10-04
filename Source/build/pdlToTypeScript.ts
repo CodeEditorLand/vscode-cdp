@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import * as PDL from './pdl-types';
+import * as PDL from "./pdl-types";
 
 export interface IDefinitionRequest {
 	name: string;
@@ -10,20 +10,23 @@ export interface IDefinitionRequest {
 }
 
 export const pdlToTypeScript = (definitions: IDefinitionRequest[] = []) =>
-	definitions.map((_, i) => domainToTypeScript(i, definitions)).join('\n\n');
+	definitions.map((_, i) => domainToTypeScript(i, definitions)).join("\n\n");
 
 const primitiveTypes = new Map([
-	['string', 'string'],
-	['number', 'number'],
-	['boolean', 'boolean'],
-	['object', 'Record<string, unknown>'],
-	['integer', 'integer'],
-	['any', 'any'],
+	["string", "string"],
+	["number", "number"],
+	["boolean", "boolean"],
+	["object", "Record<string, unknown>"],
+	["integer", "integer"],
+	["any", "any"],
 ]);
 
 const toTitleCase = (s: string) => s[0].toUpperCase() + s.substr(1);
 
-const domainToTypeScript = (index: number, definitions: IDefinitionRequest[] = []) => {
+const domainToTypeScript = (
+	index: number,
+	definitions: IDefinitionRequest[] = [],
+) => {
 	const result = [];
 	const interfaceSeparator = createSeparator();
 	const {
@@ -36,7 +39,10 @@ const domainToTypeScript = (index: number, definitions: IDefinitionRequest[] = [
 	result.push(`export type integer = number;`);
 	interfaceSeparator();
 
-	function appendText(text: string, tags: { [key: string]: string | boolean } = {}) {
+	function appendText(
+		text: string,
+		tags: { [key: string]: string | boolean } = {},
+	) {
 		for (const key of Object.keys(tags)) {
 			const value = tags[key];
 			if (!value) {
@@ -44,42 +50,51 @@ const domainToTypeScript = (index: number, definitions: IDefinitionRequest[] = [
 			}
 
 			text += `\n@${key}`;
-			if (typeof value === 'string') {
+			if (typeof value === "string") {
 				text += ` ${value}`;
 			}
 		}
 
 		if (!text) return;
-		result.push('/**');
-		for (const line of text.split('\n')) result.push(` * ${line}`);
-		result.push(' */');
+		result.push("/**");
+		for (const line of text.split("\n")) result.push(` * ${line}`);
+		result.push(" */");
 	}
 
 	function createSeparator() {
 		let first = true;
 		return function () {
-			if (!first) result.push('');
+			if (!first) result.push("");
 			first = false;
 		};
 	}
 
-	const makeTypePredicate = (domainName: string, typeName: string) => (domain: PDL.Domain) => {
-		return domain.domain === domainName && domain.types?.some(t => t.id === typeName);
-	};
+	const makeTypePredicate =
+		(domainName: string, typeName: string) => (domain: PDL.Domain) => {
+			return (
+				domain.domain === domainName &&
+				domain.types?.some((t) => t.id === typeName)
+			);
+		};
 
-	function generateType(domain: PDL.Domain, prop: PDL.DataType<boolean>): string {
-		if (prop.type === 'string' && prop.enum) {
-			return `${prop.enum.map(value => `'${value}'`).join(' | ')}`;
+	function generateType(
+		domain: PDL.Domain,
+		prop: PDL.DataType<boolean>,
+	): string {
+		if (prop.type === "string" && prop.enum) {
+			return `${prop.enum.map((value) => `'${value}'`).join(" | ")}`;
 		}
 
-		if ('$ref' in prop) {
-			let [domainName, typeName] = prop.$ref.split('.');
+		if ("$ref" in prop) {
+			let [domainName, typeName] = prop.$ref.split(".");
 			if (!typeName) {
 				[domainName, typeName] = [domain.domain, domainName];
 			}
 
 			const hasType = makeTypePredicate(domainName, typeName);
-			const containing = definitions.find(d => d.definition.domains.some(hasType));
+			const containing = definitions.find((d) =>
+				d.definition.domains.some(hasType),
+			);
 			if (!containing) {
 				throw new Error(`${prop.$ref} is not contained in any domain`);
 			}
@@ -89,8 +104,10 @@ const domainToTypeScript = (index: number, definitions: IDefinitionRequest[] = [
 				: `${containing.name}.${prop.$ref}`;
 		}
 
-		if (prop.type === 'array') {
-			const subtype = prop.items ? generateType(domain, prop.items) : 'any';
+		if (prop.type === "array") {
+			const subtype = prop.items
+				? generateType(domain, prop.items)
+				: "any";
 			return `${subtype}[]`;
 		}
 
@@ -102,12 +119,19 @@ const domainToTypeScript = (index: number, definitions: IDefinitionRequest[] = [
 		throw new Error(`Unknown type: ${JSON.stringify(prop)}`);
 	}
 
-	function appendProps(domain: PDL.Domain, props: Iterable<PDL.DataType<false>>) {
+	function appendProps(
+		domain: PDL.Domain,
+		props: Iterable<PDL.DataType<false>>,
+	) {
 		const separator = createSeparator();
 		for (const prop of props) {
 			separator();
-			appendText(prop.description ?? '', { deprecated: !!prop.deprecated });
-			result.push(`${prop.name}${prop.optional ? '?' : ''}: ${generateType(domain, prop)};`);
+			appendText(prop.description ?? "", {
+				deprecated: !!prop.deprecated,
+			});
+			result.push(
+				`${prop.name}${prop.optional ? "?" : ""}: ${generateType(domain, prop)};`,
+			);
 		}
 	}
 
@@ -123,7 +147,9 @@ const domainToTypeScript = (index: number, definitions: IDefinitionRequest[] = [
 		result.push(`requests: {`);
 		for (const command of commands) {
 			apiSeparator();
-			appendText(command.description, { deprecated: !!command.deprecated });
+			appendText(command.description, {
+				deprecated: !!command.deprecated,
+			});
 			result.push(
 				`${command.name}: { params: ${name}.${toTitleCase(
 					command.name,
@@ -136,7 +162,9 @@ const domainToTypeScript = (index: number, definitions: IDefinitionRequest[] = [
 		for (const event of events) {
 			apiSeparator();
 			appendText(event.description, { deprecated: !!event.deprecated });
-			result.push(`${event.name}: { params: ${name}.${toTitleCase(event.name)}Event };`);
+			result.push(
+				`${event.name}: { params: ${name}.${toTitleCase(event.name)}Event };`,
+			);
 		}
 
 		result.push(`};`);
@@ -149,12 +177,16 @@ const domainToTypeScript = (index: number, definitions: IDefinitionRequest[] = [
 		for (const command of commands) {
 			typesSeparator();
 			appendText(`Parameters of the '${name}.${command.name}' method.`);
-			result.push(`export interface ${toTitleCase(command.name)}Params {`);
+			result.push(
+				`export interface ${toTitleCase(command.name)}Params {`,
+			);
 			appendProps(domain, command.parameters || []);
 			result.push(`}`);
 			typesSeparator();
 			appendText(`Return value of the '${name}.${command.name}' method.`);
-			result.push(`export interface ${toTitleCase(command.name)}Result {`);
+			result.push(
+				`export interface ${toTitleCase(command.name)}Result {`,
+			);
 			appendProps(domain, command.returns || []);
 			result.push(`}`);
 		}
@@ -167,31 +199,35 @@ const domainToTypeScript = (index: number, definitions: IDefinitionRequest[] = [
 		}
 		for (const type of types) {
 			typesSeparator();
-			appendText(type.description ?? '', { deprecated: !!type.deprecated });
-			if (type.type === 'object') {
+			appendText(type.description ?? "", {
+				deprecated: !!type.deprecated,
+			});
+			if (type.type === "object") {
 				result.push(`export interface ${toTitleCase(type.id)} {`);
 				if (type.properties) appendProps(domain, type.properties);
 				else result.push(`[key: string]: any;`);
 				result.push(`}`);
 			} else {
-				result.push(`export type ${toTitleCase(type.id)} = ${generateType(domain, type)};`);
+				result.push(
+					`export type ${toTitleCase(type.id)} = ${generateType(domain, type)};`,
+				);
 			}
 		}
 		result.push(`}`);
 	}
 
 	interfaceSeparator();
-	appendText('The list of domains.');
+	appendText("The list of domains.");
 	result.push(`export interface Domains {
 `);
-	domains.forEach(d => {
+	domains.forEach((d) => {
 		result.push(`${d.domain}: ${d.domain}Api;`);
 	});
 	result.push(`}`);
 
-	domains.forEach(d => appendDomain(d));
+	domains.forEach((d) => appendDomain(d));
 
 	result.push(`}`);
 
-	return result.join('\n');
+	return result.join("\n");
 };

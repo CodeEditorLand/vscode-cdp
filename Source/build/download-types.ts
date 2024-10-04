@@ -2,28 +2,29 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { promises as fs } from 'fs';
-import * as path from 'path';
-import { formatTs } from './format';
-import { pdlUrlToJson } from './pdl2json';
-import { pdlToTypeScript } from './pdlToTypeScript';
+import { promises as fs } from "fs";
+import * as path from "path";
+
+import { formatTs } from "./format";
+import { pdlUrlToJson } from "./pdl2json";
+import { pdlToTypeScript } from "./pdlToTypeScript";
 
 const sources = new Map([
 	[
-		'CdpV8',
-		'https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/js_protocol.pdl',
+		"CdpV8",
+		"https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/js_protocol.pdl",
 	],
 	[
-		'CdpBrowser',
-		'https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/browser_protocol.pdl',
+		"CdpBrowser",
+		"https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/browser_protocol.pdl",
 	],
 	[
-		'CdpNode',
-		'https://raw.githubusercontent.com/nodejs/node/master/src/inspector/node_protocol.pdl',
+		"CdpNode",
+		"https://raw.githubusercontent.com/nodejs/node/master/src/inspector/node_protocol.pdl",
 	],
 ]);
 
-const target = path.resolve(__dirname, '../../src/definitions.ts');
+const target = path.resolve(__dirname, "../../src/definitions.ts");
 
 async function main() {
 	const definitions = pdlToTypeScript(
@@ -35,7 +36,8 @@ async function main() {
 		),
 	);
 
-	const src = await formatTs(`/*---------------------------------------------------------
+	const src =
+		await formatTs(`/*---------------------------------------------------------
 * Copyright (C) Microsoft Corporation. All rights reserved.
 *--------------------------------------------------------*/
 
@@ -46,7 +48,7 @@ ${definitions}`);
 	await fs.writeFile(target, src);
 }
 
-main().catch(err => {
+main().catch((err) => {
 	console.error(err);
 	process.exit(1);
 });

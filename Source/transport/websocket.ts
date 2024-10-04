@@ -2,10 +2,11 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { EventEmitter } from 'cockatiel';
-import * as WebSocket from 'ws';
-import { ICancellationToken, timeoutPromise } from '../cancellation';
-import { ITransport, Transportable } from '.';
+import { EventEmitter } from "cockatiel";
+import * as WebSocket from "ws";
+
+import { ITransport, Transportable } from ".";
+import { ICancellationToken, timeoutPromise } from "../cancellation";
 
 /**
  * Transport that works over a DOM or Node.js WebSocket.
@@ -27,7 +28,7 @@ export class WebSocketTransport implements ITransport {
 		cancellationToken: ICancellationToken,
 	): Promise<WebSocketTransport> {
 		const ws = new WebSocket(url, [], {
-			headers: { host: 'localhost' },
+			headers: { host: "localhost" },
 			maxPayload: 256 * 1024 * 1024,
 			followRedirects: true,
 			...options,
@@ -35,12 +36,16 @@ export class WebSocketTransport implements ITransport {
 
 		return timeoutPromise(
 			new Promise<WebSocketTransport>((resolve, reject) => {
-				ws.addEventListener('open', () => resolve(new WebSocketTransport(ws)));
-				ws.addEventListener('error', errorEvent => reject(errorEvent.error)); // Parameter is an ErrorEvent. See https://github.com/websockets/ws/blob/master/doc/ws.md#websocketonerror
+				ws.addEventListener("open", () =>
+					resolve(new WebSocketTransport(ws)),
+				);
+				ws.addEventListener("error", (errorEvent) =>
+					reject(errorEvent.error),
+				); // Parameter is an ErrorEvent. See https://github.com/websockets/ws/blob/master/doc/ws.md#websocketonerror
 			}),
 			cancellationToken,
 			`Could not open ${url}`,
-		).catch(err => {
+		).catch((err) => {
 			ws.close();
 			throw err;
 		});
@@ -48,14 +53,14 @@ export class WebSocketTransport implements ITransport {
 
 	constructor(ws: WebSocket) {
 		this._ws = ws;
-		this._ws.addEventListener('message', event => {
+		this._ws.addEventListener("message", (event) => {
 			this.messageEmitter.emit(event.data);
 		});
-		this._ws.addEventListener('close', () => {
+		this._ws.addEventListener("close", () => {
 			this.endEmitter.emit(undefined);
 			this._ws = undefined;
 		});
-		this._ws.addEventListener('error', err => {
+		this._ws.addEventListener("error", (err) => {
 			this.endEmitter.emit(err.error);
 			this._ws?.terminate();
 			this._ws = undefined;
@@ -73,12 +78,12 @@ export class WebSocketTransport implements ITransport {
 	 * @inheritdoc
 	 */
 	dispose() {
-		return new Promise<void>(resolve => {
+		return new Promise<void>((resolve) => {
 			if (!this._ws) {
 				return resolve();
 			}
 
-			this._ws.addEventListener('close', resolve);
+			this._ws.addEventListener("close", resolve);
 			this._ws.close();
 		});
 	}

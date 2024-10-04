@@ -2,8 +2,8 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { CdpProtocol } from '../cdp-protocol';
-import { Transportable } from '../transport';
+import { CdpProtocol } from "../cdp-protocol";
+import { Transportable } from "../transport";
 
 export interface ISerializer {
 	/**
