@@ -1,16 +1,16 @@
 {
 	"dependencies": {
-		"@types/ws": "8.5.12",
+		"@types/ws": "8.5.13",
 		"cockatiel": "3.2.1",
 		"ws": "8.18.0"
 	},
 	"description": "Node.js libraries for interfacing with the Chrome DevTools Protocol",
 	"devDependencies": {
-		"@types/node": "22.8.6",
-		"concurrently": "9.0.1",
-		"devtools-protocol": "0.0.1376744",
+		"@types/node": "22.9.0",
+		"concurrently": "9.1.0",
+		"devtools-protocol": "0.0.1378738",
 		"execa": "9.5.1",
-		"got": "14.4.3",
+		"got": "14.4.4",
 		"rimraf": "6.0.1"
 	},
 	"main": "dist/index.js",
