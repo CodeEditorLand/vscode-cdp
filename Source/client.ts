@@ -48,11 +48,13 @@ const makeEventClient = <TDomains>(session: {
 		{
 			get(_, domain: string) {
 				const existing = eventProxies.get(domain);
+
 				if (existing) {
 					return existing.proxy;
 				}
 
 				const emitters = new Map<string, EventEmitter<unknown>>();
+
 				const proxy = new Proxy(
 					{},
 					{
@@ -71,12 +73,14 @@ const makeEventClient = <TDomains>(session: {
 								eventOrMethod.slice(3);
 
 							const existing = emitters.get(event);
+
 							if (existing) {
 								return existing.addListener;
 							}
 
 							const emitter = new EventEmitter();
 							emitters.set(event, emitter);
+
 							return emitter.addListener;
 						},
 					},
@@ -127,6 +131,7 @@ export class ClientCdpSession<TDomains> extends CdpSession {
 
 		const toSend = this.pauseQueue;
 		this.pauseQueue = undefined;
+
 		for (const item of toSend) {
 			this.processResponse(item);
 		}
@@ -147,6 +152,7 @@ export class ClientCdpSession<TDomains> extends CdpSession {
 			params,
 			this.sessionId,
 		);
+
 		return new Promise<unknown>((resolve, reject) => {
 			const obj: IProtocolCallback = { resolve, reject, method };
 
@@ -183,15 +189,18 @@ export class ClientCdpSession<TDomains> extends CdpSession {
 			// for some reason, TS doesn't narrow this even though CdpProtocol.ICommand
 			// is the only type of the tuple where id can be undefined.
 			this.eventEmitter.emit(object as CdpProtocol.ICommand);
+
 			return;
 		}
 
 		const callback = this.callbacks.get(object.id);
+
 		if (!callback) {
 			return;
 		}
 
 		this.callbacks.delete(object.id);
+
 		if ("error" in object) {
 			callback.reject(
 				ProtocolError.from(

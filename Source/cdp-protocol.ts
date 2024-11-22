@@ -27,6 +27,7 @@ export namespace CdpProtocol {
 
 	export const isCommand = (message: Message): message is ICommand =>
 		"method" in message;
+
 	export const isResponse = (
 		message: Message,
 	): message is IError | ISuccess =>

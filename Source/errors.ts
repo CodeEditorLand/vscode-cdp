@@ -41,16 +41,22 @@ export class ProtocolError extends CdpError {
 		switch (cause.code) {
 			case ProtocolErrorCode.ParseError:
 				return new ProtocolParseError(cause, originalStack);
+
 			case ProtocolErrorCode.InvalidRequest:
 				return new InvalidRequestError(cause, originalStack);
+
 			case ProtocolErrorCode.MethodNotFound:
 				return new MethodNotFoundError(cause, originalStack);
+
 			case ProtocolErrorCode.InvalidParams:
 				return new InvalidParametersError(cause, originalStack);
+
 			case ProtocolErrorCode.InternalError:
 				return new InternalError(cause, originalStack);
+
 			case ProtocolErrorCode.ServerError:
 				return new ServerError(cause, originalStack);
+
 			default:
 				return new ProtocolError(cause, originalStack);
 		}
@@ -63,6 +69,7 @@ export class ProtocolError extends CdpError {
 		super(
 			`CDP error ${cause.code} calling method ${cause.method}: ${cause.message}`,
 		);
+
 		if (originalStack) {
 			this.stack = originalStack;
 		}
@@ -106,6 +113,7 @@ export class ConnectionClosedError extends CdpError {
 		originalStack?: string,
 	) {
 		super(cause ? cause.message : "Connection closed");
+
 		if (originalStack) {
 			this.stack = originalStack;
 		}
@@ -146,6 +154,7 @@ export class MessageProcessingError extends CdpError {
 		public readonly protocolMessage: CdpProtocol.Message,
 	) {
 		super(`Error processing a CDP message: ${cause.message}`);
+
 		if (cause.stack) {
 			this.stack = cause.stack;
 		}

@@ -47,6 +47,7 @@ export class WebSocketTransport implements ITransport {
 			`Could not open ${url}`,
 		).catch((err) => {
 			ws.close();
+
 			throw err;
 		});
 	}

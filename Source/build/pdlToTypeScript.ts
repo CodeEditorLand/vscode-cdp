@@ -28,7 +28,9 @@ const domainToTypeScript = (
 	definitions: IDefinitionRequest[] = [],
 ) => {
 	const result = [];
+
 	const interfaceSeparator = createSeparator();
+
 	const {
 		name,
 		definition: { domains },
@@ -45,11 +47,13 @@ const domainToTypeScript = (
 	) {
 		for (const key of Object.keys(tags)) {
 			const value = tags[key];
+
 			if (!value) {
 				continue;
 			}
 
 			text += `\n@${key}`;
+
 			if (typeof value === "string") {
 				text += ` ${value}`;
 			}
@@ -57,12 +61,14 @@ const domainToTypeScript = (
 
 		if (!text) return;
 		result.push("/**");
+
 		for (const line of text.split("\n")) result.push(` * ${line}`);
 		result.push(" */");
 	}
 
 	function createSeparator() {
 		let first = true;
+
 		return function () {
 			if (!first) result.push("");
 			first = false;
@@ -87,14 +93,17 @@ const domainToTypeScript = (
 
 		if ("$ref" in prop) {
 			let [domainName, typeName] = prop.$ref.split(".");
+
 			if (!typeName) {
 				[domainName, typeName] = [domain.domain, domainName];
 			}
 
 			const hasType = makeTypePredicate(domainName, typeName);
+
 			const containing = definitions.find((d) =>
 				d.definition.domains.some(hasType),
 			);
+
 			if (!containing) {
 				throw new Error(`${prop.$ref} is not contained in any domain`);
 			}
@@ -108,10 +117,12 @@ const domainToTypeScript = (
 			const subtype = prop.items
 				? generateType(domain, prop.items)
 				: "any";
+
 			return `${subtype}[]`;
 		}
 
 		const primitiveType = primitiveTypes.get(prop.type);
+
 		if (primitiveType) {
 			return primitiveType;
 		}
@@ -124,6 +135,7 @@ const domainToTypeScript = (
 		props: Iterable<PDL.DataType<false>>,
 	) {
 		const separator = createSeparator();
+
 		for (const prop of props) {
 			separator();
 			appendText(prop.description ?? "", {
@@ -137,14 +149,19 @@ const domainToTypeScript = (
 
 	function appendDomain(domain: PDL.Domain) {
 		const apiSeparator = createSeparator();
+
 		const commands = domain.commands || [];
+
 		const events = domain.events || [];
+
 		const types = domain.types || [];
+
 		const name = toTitleCase(domain.domain);
 		interfaceSeparator();
 		appendText(`Methods and events of the '${name}' domain.`);
 		result.push(`export interface ${name}Api {`);
 		result.push(`requests: {`);
+
 		for (const command of commands) {
 			apiSeparator();
 			appendText(command.description, {
@@ -159,6 +176,7 @@ const domainToTypeScript = (
 		result.push(`};`);
 
 		result.push(`events: {`);
+
 		for (const event of events) {
 			apiSeparator();
 			appendText(event.description, { deprecated: !!event.deprecated });
@@ -174,6 +192,7 @@ const domainToTypeScript = (
 		interfaceSeparator();
 		appendText(`Types of the '${name}' domain.`);
 		result.push(`export namespace ${name} {`);
+
 		for (const command of commands) {
 			typesSeparator();
 			appendText(`Parameters of the '${name}.${command.name}' method.`);
@@ -202,9 +221,12 @@ const domainToTypeScript = (
 			appendText(type.description ?? "", {
 				deprecated: !!type.deprecated,
 			});
+
 			if (type.type === "object") {
 				result.push(`export interface ${toTitleCase(type.id)} {`);
+
 				if (type.properties) appendProps(domain, type.properties);
+
 				else result.push(`[key: string]: any;`);
 				result.push(`}`);
 			} else {
@@ -220,6 +242,7 @@ const domainToTypeScript = (
 	appendText("The list of domains.");
 	result.push(`export interface Domains {
 `);
+
 	domains.forEach((d) => {
 		result.push(`${d.domain}: ${d.domain}Api;`);
 	});

@@ -21,11 +21,13 @@ const makeEventDispatcher = <TDomains>(
 	const eventGetMethod =
 		(t: { domain: string }, event: string) => (params: unknown) =>
 			send({ method: `${t.domain}.${event}`, params });
+
 	return new Proxy(
 		{},
 		{
 			get(_, domain: string) {
 				let targetEvents = eventProxies.get(domain);
+
 				if (!targetEvents) {
 					targetEvents = new Proxy(
 						{ domain },
@@ -75,16 +77,21 @@ export class ServerCdpSession<TDomains> extends CdpSession {
 		}
 
 		const [domain, fn] = cmd.method.split(".");
+
 		const id = cmd.id || 0;
+
 		if (!this.api || !this.api.hasOwnProperty(domain)) {
 			this.handleUnknown(id, cmd);
+
 			return;
 		}
 
 		const domainFns =
 			this.api[domain as keyof CdpServerMethodHandlers<TDomains>];
+
 		if (typeof domainFns !== "object" || !domainFns.hasOwnProperty(fn)) {
 			this.handleUnknown(id, cmd);
+
 			return;
 		}
 
@@ -98,6 +105,7 @@ export class ServerCdpSession<TDomains> extends CdpSession {
 	 */
 	public send(message: CdpProtocol.Message) {
 		message.sessionId = this.sessionId;
+
 		if (this.connection.state === ConnectionState.Open) {
 			this.connection.object.send(message);
 		}
@@ -110,6 +118,7 @@ export class ServerCdpSession<TDomains> extends CdpSession {
 				cmd.method,
 				cmd.params,
 			);
+
 			if (!result) {
 				throw MethodNotFoundError.create(cmd.method);
 			}

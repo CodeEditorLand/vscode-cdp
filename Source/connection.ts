@@ -117,6 +117,7 @@ export class Connection<T extends CdpSession> {
 	): number {
 		const id = ++this.lastId;
 		this.send({ id, method, params, sessionId });
+
 		return id;
 	}
 
@@ -145,6 +146,7 @@ export class Connection<T extends CdpSession> {
 		}
 
 		const existing = this.sessions.get(sessionId);
+
 		if (existing) {
 			return existing;
 		}
@@ -152,6 +154,7 @@ export class Connection<T extends CdpSession> {
 		const session: T = new this.sessionCtor(this, sessionId);
 		this.sessions.set(sessionId, session);
 		session.onDidClose(() => this.sessions.delete(sessionId));
+
 		return session;
 	}
 
@@ -168,10 +171,12 @@ export class Connection<T extends CdpSession> {
 
 	private onMessage(message: Transportable) {
 		let object: CdpProtocol.Message;
+
 		try {
 			object = this.serializer.deserialize(message);
 		} catch (e) {
 			this.receiveErrorEmitter.emit(new DeserializationError(e, message));
+
 			return;
 		}
 
@@ -180,8 +185,10 @@ export class Connection<T extends CdpSession> {
 		const session = object.sessionId
 			? this.sessions.get(object.sessionId)
 			: this.rootSession;
+
 		if (!session) {
 			this.receiveErrorEmitter.emit(new UnknownSessionError(object));
+
 			return;
 		}
 
@@ -191,6 +198,7 @@ export class Connection<T extends CdpSession> {
 			this.receiveErrorEmitter.emit(
 				new MessageProcessingError(e, object),
 			);
+
 			return;
 		}
 	}

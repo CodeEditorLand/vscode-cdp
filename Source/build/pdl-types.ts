@@ -18,6 +18,7 @@ export interface Command {
 	experimental?: true;
 	deprecated?: boolean;
 	parameters?: ReadonlyArray<DataType<false>>;
+
 	returns?: ReadonlyArray<DataType<false>>;
 }
 
