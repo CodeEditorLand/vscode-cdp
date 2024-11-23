@@ -226,7 +226,6 @@ const domainToTypeScript = (
 				result.push(`export interface ${toTitleCase(type.id)} {`);
 
 				if (type.properties) appendProps(domain, type.properties);
-
 				else result.push(`[key: string]: any;`);
 				result.push(`}`);
 			} else {
