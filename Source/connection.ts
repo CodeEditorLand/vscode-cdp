@@ -23,6 +23,7 @@ type SessionCtor<T extends CdpSession> = {
 };
 
 export type ClientConnection<TDomains> = Connection<ClientCdpSession<TDomains>>;
+
 export type ServerConnection<TDomains> = Connection<ServerCdpSession<TDomains>>;
 
 export class Connection<T extends CdpSession> {
