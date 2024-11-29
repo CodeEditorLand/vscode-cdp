@@ -9,11 +9,13 @@ import { Event } from "cockatiel";
  */
 export interface IDomain {
 	requests: { [key: string]: IRequestDef<unknown, unknown> };
+
 	events: { [key: string]: IEventDef<unknown> };
 }
 
 export interface IRequestDef<TParams, TResponse> {
 	params: TParams;
+
 	result: TResponse;
 }
 

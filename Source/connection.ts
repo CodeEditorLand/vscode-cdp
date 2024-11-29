@@ -28,12 +28,18 @@ export type ServerConnection<TDomains> = Connection<ServerCdpSession<TDomains>>;
 
 export class Connection<T extends CdpSession> {
 	private readonly sessions = new Map<string, T>();
+
 	private lastId = 1000;
+
 	private _closed = false;
+
 	private readonly closeEmitter = new EventEmitter<Error | undefined>();
+
 	private readonly willSendEmitter = new EventEmitter<CdpProtocol.ICommand>();
+
 	private readonly didReceiveEmitter =
 		new EventEmitter<CdpProtocol.Message>();
+
 	private readonly receiveErrorEmitter = new EventEmitter<Error>();
 
 	/**
@@ -104,6 +110,7 @@ export class Connection<T extends CdpSession> {
 		private readonly sessionCtor: SessionCtor<T>,
 	) {
 		transport.onMessage((message) => this.onMessage(message));
+
 		transport.onEnd((err) => this.onTransportClose(err));
 	}
 
@@ -117,6 +124,7 @@ export class Connection<T extends CdpSession> {
 		sessionId: string | undefined,
 	): number {
 		const id = ++this.lastId;
+
 		this.send({ id, method, params, sessionId });
 
 		return id;
@@ -153,7 +161,9 @@ export class Connection<T extends CdpSession> {
 		}
 
 		const session: T = new this.sessionCtor(this, sessionId);
+
 		this.sessions.set(sessionId, session);
+
 		session.onDidClose(() => this.sessions.delete(sessionId));
 
 		return session;
@@ -165,8 +175,11 @@ export class Connection<T extends CdpSession> {
 		}
 
 		this._closed = true;
+
 		this.transport.dispose();
+
 		this.closeEmitter.emit(error);
+
 		this.rootSession.dispose();
 	}
 

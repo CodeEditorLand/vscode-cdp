@@ -12,8 +12,11 @@ import { ConnectionClosedError, ProtocolError } from "./errors";
 
 interface IProtocolCallback {
 	resolve: (o: unknown) => void;
+
 	reject: (e: Error) => void;
+
 	stack?: string;
+
 	method: string;
 }
 
@@ -31,6 +34,7 @@ const eventRe = /^on[A-Z]/;
 
 const makeEventClient = <TDomains>(session: {
 	onDidReceiveEvent: Event<CdpProtocol.ICommand>;
+
 	request(method: string, params: Record<string, unknown>): unknown;
 }) => {
 	const eventProxies = new Map<
@@ -40,6 +44,7 @@ const makeEventClient = <TDomains>(session: {
 
 	session.onDidReceiveEvent((evt) => {
 		const [domain, event] = evt.method.split(".");
+
 		eventProxies.get(domain)?.emitters.get(event)?.emit(evt.params);
 	});
 
@@ -79,12 +84,14 @@ const makeEventClient = <TDomains>(session: {
 							}
 
 							const emitter = new EventEmitter();
+
 							emitters.set(event, emitter);
 
 							return emitter.addListener;
 						},
 					},
 				);
+
 				eventProxies.set(domain, { emitters, proxy });
 
 				return proxy;
@@ -98,7 +105,9 @@ const makeEventClient = <TDomains>(session: {
  */
 export class ClientCdpSession<TDomains> extends CdpSession {
 	private readonly callbacks = new Map<number, IProtocolCallback>();
+
 	private readonly eventEmitter = new EventEmitter<CdpProtocol.ICommand>();
+
 	private pauseQueue?: CdpProtocol.Message[];
 
 	/**
@@ -130,6 +139,7 @@ export class ClientCdpSession<TDomains> extends CdpSession {
 		}
 
 		const toSend = this.pauseQueue;
+
 		this.pauseQueue = undefined;
 
 		for (const item of toSend) {
@@ -181,6 +191,7 @@ export class ClientCdpSession<TDomains> extends CdpSession {
 		}
 
 		this.callbacks.clear();
+
 		this.pauseQueue = undefined;
 	}
 

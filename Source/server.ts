@@ -33,6 +33,7 @@ const makeEventDispatcher = <TDomains>(
 						{ domain },
 						{ get: eventGetMethod },
 					);
+
 					eventProxies.set(domain, targetEvents);
 				}
 
@@ -135,6 +136,7 @@ export class ServerCdpSession<TDomains> extends CdpSession {
 				this.send(e.serialize(id));
 			} else {
 				this.handlerErrorEmitter.emit(e);
+
 				this.send({
 					id,
 					error: {

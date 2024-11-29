@@ -35,11 +35,15 @@ export async function pdlStringToJson(str: string) {
 		]);
 
 		const data: Buffer[] = [];
+
 		exe.stdout.on("data", (c) => data.push(c));
+
 		exe.stderr.pipe(process.stderr);
+
 		exe.stdin.end(str);
 
 		exe.on("error", reject);
+
 		exe.on("exit", (code) => {
 			const stdout = Buffer.concat(data).toString("utf-8");
 
@@ -75,5 +79,6 @@ function downloadPdlPyIfMissing() {
 			);
 		})();
 	}
+
 	return downloadPdlPyIfMissingPromise;
 }

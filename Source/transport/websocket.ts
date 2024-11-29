@@ -13,10 +13,13 @@ import { ICancellationToken, timeoutPromise } from "../cancellation";
  */
 export class WebSocketTransport implements ITransport {
 	private _ws: WebSocket | undefined;
+
 	private readonly messageEmitter = new EventEmitter<Transportable>();
+
 	private readonly endEmitter = new EventEmitter<Error | undefined>();
 
 	public readonly onMessage = this.messageEmitter.addListener;
+
 	public readonly onEnd = this.endEmitter.addListener;
 
 	/**
@@ -39,6 +42,7 @@ export class WebSocketTransport implements ITransport {
 				ws.addEventListener("open", () =>
 					resolve(new WebSocketTransport(ws)),
 				);
+
 				ws.addEventListener("error", (errorEvent) =>
 					reject(errorEvent.error),
 				); // Parameter is an ErrorEvent. See https://github.com/websockets/ws/blob/master/doc/ws.md#websocketonerror
@@ -54,16 +58,22 @@ export class WebSocketTransport implements ITransport {
 
 	constructor(ws: WebSocket) {
 		this._ws = ws;
+
 		this._ws.addEventListener("message", (event) => {
 			this.messageEmitter.emit(event.data);
 		});
+
 		this._ws.addEventListener("close", () => {
 			this.endEmitter.emit(undefined);
+
 			this._ws = undefined;
 		});
+
 		this._ws.addEventListener("error", (err) => {
 			this.endEmitter.emit(err.error);
+
 			this._ws?.terminate();
+
 			this._ws = undefined;
 		});
 	}
@@ -85,6 +95,7 @@ export class WebSocketTransport implements ITransport {
 			}
 
 			this._ws.addEventListener("close", resolve);
+
 			this._ws.close();
 		});
 	}

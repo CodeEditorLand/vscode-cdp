@@ -6,6 +6,7 @@ import { Event, IDisposable, TaskCancelledError } from "cockatiel";
 
 export interface ICancellationToken {
 	readonly onCancellationRequested: Event<void>;
+
 	readonly isCancellationRequested: boolean;
 }
 

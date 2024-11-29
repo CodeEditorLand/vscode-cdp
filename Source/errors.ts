@@ -23,7 +23,9 @@ export class CdpError extends Error {}
 
 export interface IProtocolErrorCause {
 	code: number;
+
 	method: string;
+
 	message: string;
 }
 

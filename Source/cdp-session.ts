@@ -13,7 +13,9 @@ import { Connection, ConnectionState } from "./connection";
  */
 export abstract class CdpSession implements IDisposable {
 	private readonly closeEmitter = new EventEmitter<Error | undefined>();
+
 	protected readonly disposables: IDisposable[] = [];
+
 	protected connection:
 		| { state: ConnectionState.Open; object: Connection<CdpSession> }
 		| { state: ConnectionState.Closed; cause: Error | undefined };
@@ -37,6 +39,7 @@ export abstract class CdpSession implements IDisposable {
 		public readonly sessionId: string | undefined,
 	) {
 		this.connection = { state: ConnectionState.Open, object: connection };
+
 		this.disposables.push(
 			connection.onDidClose((cause) => this.disposeSelf(cause)),
 		);
@@ -64,7 +67,9 @@ export abstract class CdpSession implements IDisposable {
 		}
 
 		this.disposeInner(cause);
+
 		this.connection = { state: ConnectionState.Closed, cause };
+
 		this.closeEmitter.emit(cause);
 	}
 

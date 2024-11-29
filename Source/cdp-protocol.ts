@@ -6,20 +6,27 @@
 export namespace CdpProtocol {
 	export interface ICommand {
 		id?: number;
+
 		method: string;
+
 		params: unknown;
+
 		sessionId?: string;
 	}
 
 	export interface IError {
 		id: number;
+
 		error: { code: number; message: string };
+
 		sessionId?: string;
 	}
 
 	export interface ISuccess {
 		id: number;
+
 		result: unknown;
+
 		sessionId?: string;
 	}
 

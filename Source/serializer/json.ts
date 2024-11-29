@@ -18,6 +18,7 @@ export class JsonSerializer implements ISerializer {
 	deserialize(message: Transportable): CdpProtocol.Message {
 		if (typeof message !== "string") {
 			this.decoder ??= new TextDecoder();
+
 			message = this.decoder.decode(message);
 		}
 

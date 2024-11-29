@@ -11,10 +11,13 @@ import { ITransport, Transportable } from "./index";
  */
 export class LoopbackTransport implements ITransport {
 	private readonly messageEmitter = new EventEmitter<Transportable>();
+
 	private readonly endEmitter = new EventEmitter<Error | undefined>();
+
 	private readonly didSendEmitter = new EventEmitter<Transportable>();
 
 	public readonly onMessage = this.messageEmitter.addListener;
+
 	public readonly onEnd = this.endEmitter.addListener;
 
 	/**
