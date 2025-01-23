@@ -10,12 +10,12 @@
 		"update": "ts-node src/build/download-types"
 	},
 	"dependencies": {
-		"@types/ws": "8.5.13",
+		"@types/ws": "8.5.14",
 		"cockatiel": "3.2.1",
 		"ws": "8.18.0"
 	},
 	"devDependencies": {
-		"@types/node": "22.10.9",
+		"@types/node": "22.10.10",
 		"concurrently": "9.1.2",
 		"devtools-protocol": "0.0.1409451",
 		"execa": "9.5.2",
